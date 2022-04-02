@@ -166,8 +166,21 @@ class Bios(base.ResourceBase):
                     maint_window_start_time.isoformat()
                 payload[prop]['MaintenanceWindowDurationInSeconds'] =\
                     maint_window_duration
+
+        headers = None
+        etag = self._get_etag()
+        path = self.path
+
+        if self._settings and self._settings.resource_uri:
+            path = self._settings.resource_uri
+            resp = self._conn.get(path)
+            etag = resp.headers.get('ETag')
+
+        if etag is not None:
+            headers = {'If-Match': etag}
+
         self._settings.commit(self._conn,
-                              payload)
+                              payload, headers)
         utils.cache_clear(self, force_refresh=False,
                           only_these=['_pending_settings_resource'])
 

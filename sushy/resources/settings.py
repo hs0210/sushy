@@ -158,7 +158,7 @@ class SettingsField(base.CompositeField):
                     'property in the target resource (e.g. Bios resource)')
         return None
 
-    def commit(self, connector, value):
+    def commit(self, connector, value, headers):
         """Commits new settings values
 
         The new values will be applied when the system or a service
@@ -169,7 +169,7 @@ class SettingsField(base.CompositeField):
             to each resource and the caller must format it correctly
         """
 
-        connector.patch(self.resource_uri, data=value)
+        connector.patch(self.resource_uri, data=value, headers=headers)
 
     @property
     def resource_uri(self):
